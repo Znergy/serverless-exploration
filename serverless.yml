@@ -61,8 +61,8 @@ functions:
           path: api/v1/users
           method: GET
           cors: true
-  postUser:
-    handler: users.postUser
+  createUser:
+    handler: users.createUser
     events:
       - http:
           path: api/v1/users

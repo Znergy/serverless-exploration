@@ -23,8 +23,11 @@ function getUsers(event, context, callback) {
   })
 }
 
-function postUser(event, context, callback) {
-  let json = JSON.parse(event.body)
+function createUser(event, context, callback) {
+  let json = null;
+  if(event.body) {
+    json = JSON.parse(event.body)
+  }
 
   callback(null, {
     statusCode: 200,
@@ -74,4 +77,4 @@ function deleteUserByID(event, context, callback) {
   })
 }
 
-module.exports = { getUsers, postUser, updateUserByID, getUserByID, deleteUserByID };
+module.exports = { getUsers, createUser, updateUserByID, getUserByID, deleteUserByID };
