@@ -68,6 +68,7 @@ function hello(event, context, callback) {
 }
 
 function hello1(event, context, callback) {
+  // local testing
   if(event.pathParameters && event.pathParameters.name) {
     callback(null, {
       statusCode: 200,
@@ -75,6 +76,28 @@ function hello1(event, context, callback) {
         message: `Hello, ${event.pathParameters.name}`
       })
     })
+  } else if(event.queryStringParameters && event.queryStringParameters.name) {
+    callback(null, {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `Hello, ${event.queryStringParameters.name}`,
+        method: 'POST'
+      })
+    })
+  } else {
+    const response = {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
+      body: JSON.stringify({
+        message: 'Working! Your function executed successfully!',
+        input: event,
+      }),
+    };
+
+    callback(null, response);
   }
 }
 
