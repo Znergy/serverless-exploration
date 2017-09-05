@@ -59,8 +59,15 @@ functions:
     events:
       - http:
           path: first-endpoint
-          method: GET
-
+          method: get
+          cors: true
+  hello1:
+    handler: handler.hello1
+    events:
+      - http:
+          path: second-endpoint
+          method: get
+          cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
