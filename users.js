@@ -1,3 +1,12 @@
+var AWS = require("aws-sdk");
+
+AWS.config.update({
+    region: "us-west-2",
+    endpoint: "https://dynamodb.us-west-2.amazonaws.com"
+});
+
+var docClient = new AWS.DynamoDB.DocumentClient()
+
 function getUsers(event, context, callback) {
   callback(null, {
     statusCode: 200,
@@ -24,18 +33,42 @@ function getUsers(event, context, callback) {
 }
 
 function createUser(event, context, callback) {
-  let json = null;
+  let json, userID, game, age, username = null
   if(event.body) {
     json = JSON.parse(event.body)
+    userID = json.id
+    game = json.game
+    age = json.age
+    username = json.username
   }
 
-  callback(null, {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'POST successful',
-      data: json
-    })
-  })
+  var params = {
+      TableName: 'Users',
+      Item: {
+          'UserID': userID,
+          'Game': game,
+          'Age': age,
+          'Username': username
+      }
+  };
+
+  docClient.put(params, function(err, data) {
+      if (err) {
+        callback(null, {
+          statusCode: 402,
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      }
+      callback(null, {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'User successfully created!',
+          data: params
+        })
+      })
+  });
 }
 
 function updateUserByID(event, context, callback) {
