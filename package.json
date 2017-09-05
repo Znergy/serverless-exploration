@@ -14,5 +14,8 @@
   "license": "ISC",
   "devDependencies": {
     "jshint": "^2.9.5"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.109.0"
   }
 }
