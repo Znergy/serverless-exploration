@@ -23,6 +23,18 @@ provider:
   profile: serverless
   runtime: nodejs6.10
   stage: dev
+  versionFunctions: false # default is true
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: # Gives permissions to the Users DynamoDB table in us-west-2
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:us-west-2:*:table/Users
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -56,6 +68,7 @@ provider:
 functions:
   getUsers:
     handler: users.getUsers
+    description: Get users from the Users database
     events:
       - http:
           path: api/v1/users
@@ -63,6 +76,7 @@ functions:
           cors: true
   createUser:
     handler: users.createUser
+    description: Create new users in the Users database
     events:
       - http:
           path: api/v1/users
@@ -70,6 +84,7 @@ functions:
           cors: true
   updateUserByID:
     handler: users.updateUserByID
+    description: Update existing users in the Users database
     events:
       - http:
           path: api/v1/users/{id}
@@ -77,6 +92,7 @@ functions:
           cors: true
   getUserByID:
     handler: users.getUserByID
+    description: Get users by ID from the Users database
     events:
       - http:
           path: api/v1/users/{id}
@@ -84,6 +100,7 @@ functions:
           cors: true
   deleteUserByID:
     handler: users.deleteUserByID
+    description: Delete users by ID from the Users database
     events:
       - http:
           path: api/v1/users/{id}
