@@ -1,6 +1,1 @@
-{
-  "UserID": "123",
-  "Game": "CSGO",
-  "Age": 22,
-  "Username": "Ryan Jones"
-}
+{ "id": "123", "game": "CSGO", "age": 22, "username": "Ryan Jones" }
