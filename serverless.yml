@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: awesome-api
+service: favorite-game
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -54,53 +54,39 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  getUsers:
+    handler: users.getUsers
     events:
       - http:
-          path: first-endpoint
-          method: get
-          cors: true
-  hello1:
-    handler: handler.hello1
-    events:
-      - http:
-          path: second-endpoint
-          method: post
-          cors: true
-  getTodolist:
-    handler: todolist.getTodolist
-    events:
-      - http:
-          path: api/v1/todolist
+          path: api/v1/users
           method: GET
           cors: true
-  postTodolist:
-    handler: todolist.postTodolist
+  postUser:
+    handler: users.postUser
     events:
       - http:
-          path: api/v1/todolist
+          path: api/v1/users
           method: POST
           cors: true
-  putTodolistByID:
-    handler: todolist.putTodolistByID
+  updateUserByID:
+    handler: users.updateUserByID
     events:
       - http:
-          path: api/v1/todolist/{id}
+          path: api/v1/users/{id}
           method: PUT
           cors: true
-  getTodolistByID:
-    handler: todolist.getTodolistByID
+  getUserByID:
+    handler: users.getUserByID
     events:
       - http:
-          path: api/v1/todolist/{id}
+          path: api/v1/users/{id}
           method: GET
           cors: true
-  deleteTodolistByID:
-    handler: todolist.deleteTodolistByID
+  deleteUserByID:
+    handler: users.deleteUserByID
     events:
       - http:
-          path: api/v1/todolist/{id}
+          path: api/v1/users/{id}
           method: DELETE
           cors: true
 #    The following are a few example events you can configure
@@ -141,11 +127,11 @@ resources:
    MyS3Bucket:
      Type: AWS::S3::Bucket
      Properties:
-       BucketName: awesome-api-bucket
+       BucketName: favorite-game-bucket
    MyDDBTable:
      Type: AWS::DynamoDB::Table
      Properties:
-       TableName: AwesomeApiUsers
+       TableName: Users
        AttributeDefinitions:
          -
            AttributeName: UserID
@@ -200,7 +186,7 @@ resources:
              WriteCapacityUnits: 1
        Tags:
          - Key: name
-           Value: awesome-api-users table
+           Value: favorite-game table
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"

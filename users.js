@@ -1,16 +1,30 @@
-function getTodolist(event, context, callback) {
+function getUsers(event, context, callback) {
   callback(null, {
     statusCode: 200,
-    body: JSON.stringify({
-      name: 'Ryan Jones',
-      age: 22,
-      username: 'ryanjonesx'
-    })
+    body: JSON.stringify(
+      [
+        {
+          name: 'Ryan Jones',
+          age: 22,
+          username: 'ryanjonesx'
+        },
+        {
+          name: 'Tyler Jones',
+          age: 25,
+          username: 'tylerjonesx'
+        },
+        {
+          name: 'Crystal Jones',
+          age: 28,
+          username: 'crystaljonesx'
+        }
+      ]
+    )
   })
 }
 
-function postTodolist(event, context, callback) {
-  let json = JSON.parse(event.body);
+function postUser(event, context, callback) {
+  let json = JSON.parse(event.body)
 
   callback(null, {
     statusCode: 200,
@@ -21,7 +35,7 @@ function postTodolist(event, context, callback) {
   })
 }
 
-function putTodolistByID(event, context, callback) {
+function updateUserByID(event, context, callback) {
   let id = event.pathParameters.id
 
   callback(null, {
@@ -34,7 +48,7 @@ function putTodolistByID(event, context, callback) {
   })
 }
 
-function getTodolistByID(event, context, callback) {
+function getUserByID(event, context, callback) {
   let id = event.pathParameters.id
 
   callback(null, {
@@ -47,7 +61,7 @@ function getTodolistByID(event, context, callback) {
   })
 }
 
-function deleteTodolistByID(event, context, callback) {
+function deleteUserByID(event, context, callback) {
   let id = event.pathParameters.id
 
   callback(null, {
@@ -60,4 +74,4 @@ function deleteTodolistByID(event, context, callback) {
   })
 }
 
-module.exports = { getTodolist, postTodolist, putTodolistByID, getTodolistByID, deleteTodolistByID };
+module.exports = { getUsers, postUser, updateUserByID, getUserByID, deleteUserByID };
