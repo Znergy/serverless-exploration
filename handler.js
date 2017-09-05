@@ -101,4 +101,29 @@ function hello1(event, context, callback) {
   }
 }
 
-module.exports = { hello, hello1 };
+function todolist(event, context, callback) {
+  if(event.httpMethod === "GET") {
+    callback(null, {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: { name: 'Ryan Jones', age: 22 },
+        method: 'GET'
+      })
+    })
+  }
+
+  if(event.httpMethod === "POST" && event.body) {
+    let json = JSON.parse(event.body);
+
+    callback(null, {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'I have recieved a JSON Object from you!',
+        method: 'POST',
+        data: json
+      })
+    })
+  }
+}
+
+module.exports = { hello, hello1, todolist };
