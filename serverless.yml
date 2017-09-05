@@ -68,16 +68,40 @@ functions:
           path: second-endpoint
           method: post
           cors: true
-  todolist:
-    handler: handler.todolist
+  getTodolist:
+    handler: todolist.getTodolist
     events:
       - http:
           path: api/v1/todolist
           method: GET
           cors: true
+  postTodolist:
+    handler: todolist.postTodolist
+    events:
       - http:
           path: api/v1/todolist
           method: POST
+          cors: true
+  putTodolistByID:
+    handler: todolist.putTodolistByID
+    events:
+      - http:
+          path: api/v1/todolist/{id}
+          method: PUT
+          cors: true
+  getTodolistByID:
+    handler: todolist.getTodolistByID
+    events:
+      - http:
+          path: api/v1/todolist/{id}
+          method: GET
+          cors: true
+  deleteTodolistByID:
+    handler: todolist.deleteTodolistByID
+    events:
+      - http:
+          path: api/v1/todolist/{id}
+          method: DELETE
           cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
