@@ -138,21 +138,21 @@ resources:
            AttributeName: UserID
            AttributeType: S
          -
+           AttributeName: Username
+           AttributeType: S
+         -
+           AttributeName: CreatedAt
+           AttributeType: S
+         -
            AttributeName: Game
            AttributeType: S
          -
            AttributeName: Age
            AttributeType: N
-         -
-           AttributeName: Username
-           AttributeType: S
        KeySchema:
          -
            AttributeName: UserID
            KeyType: HASH
-         -
-           AttributeName: Game
-           KeyType: RANGE
        ProvisionedThroughput:
          ReadCapacityUnits: 1
          WriteCapacityUnits: 1
@@ -180,6 +180,9 @@ resources:
              -
                AttributeName: Username
                KeyType: HASH
+             -
+               AttributeName: CreatedAt
+               KeyType: RANGE
            Projection:
              ProjectionType: ALL
            ProvisionedThroughput:
