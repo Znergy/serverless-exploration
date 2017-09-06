@@ -19,6 +19,10 @@ function getUsers(event, context, callback) {
     if (err) {
       callback(null, {
         statusCode: 402,
+        headers: {
+          "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+          "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+        },
         body: JSON.stringify({
           message: err
         })
@@ -32,6 +36,10 @@ function getUsers(event, context, callback) {
       }
       callback(null, {
         statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+          "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+        },
         body: JSON.stringify({
           data: data
         })
@@ -41,34 +49,42 @@ function getUsers(event, context, callback) {
 }
 
 function createUser(event, context, callback) {
-  let json, userID, game, age, username, data, params = null
+  let json, userID, game, age, username, date, dt, customData, params = null
   if(event.body) {
     json = JSON.parse(event.body)
-    userID = json.id
+    userID = Math.floor(Math.random() * 150) + 'afd'
     game = json.game
     age = json.age
     username = json.username
+    dt = new Date()
+    date = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate()
 
-    data = {
+    customData = {
       'UserID': userID,
+      'Username': username,
+      'CreatedAt': date,
       'Game': game,
-      'Age': age,
-      'Username': username
+      'Age': age
     }
 
     params = {
       TableName: 'Users',
       Item: {
         'UserID': userID,
+        'Username': username,
+        'CreatedAt': date,
         'Game': game,
-        'Age': age,
-        'Username': username
+        'Age': age
       }
     }
     docClient.put(params, function(err, data) {
       if (err) {
         callback(null, {
           statusCode: 402,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
           body: JSON.stringify({
             message: err
           })
@@ -76,9 +92,13 @@ function createUser(event, context, callback) {
       } else {
         callback(null, {
           statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
           body: JSON.stringify({
             message: 'User successfully created!',
-            data: data
+            data: customData
           })
         })
       }
@@ -86,6 +106,10 @@ function createUser(event, context, callback) {
   } else {
     callback(null, {
       statusCode: 404,
+      headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
       body: JSON.stringify({
         message: 'No data was passed'
       })
@@ -94,16 +118,67 @@ function createUser(event, context, callback) {
 }
 
 function updateUserByID(event, context, callback) {
-  let id = event.pathParameters.id
+  let json, userID, game, age, username, updatedAt, dt, data, params = null
+  if(event.body) {
+    json = JSON.parse(event.body)
+    game = json.game
+    age = json.age
+    username = json.username
+    userID = event.pathParameters.id
+    dt = new Date()
+    updatedAt = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate()
 
-  callback(null, {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'PUT /:id successful',
-      event: event,
-      id: id
+    params = {
+      TableName: 'Users',
+      Key: {
+        "UserID": userID
+      },
+      UpdateExpression: "SET Game = :a, Age = :b, UpdatedAt = :c",
+      ExpressionAttributeValues:{
+        ":a": game,
+        ":b": age,
+        ":c": updatedAt
+      },
+      ReturnValues:"UPDATED_NEW"
+    }
+    docClient.update(params, function(err, data) {
+      if (err) {
+        callback(null, {
+          statusCode: 402,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      } else {
+        callback(null, {
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
+          body: JSON.stringify({
+            message: 'User successfully updated!',
+            data: data
+          })
+        })
+      }
     })
-  })
+  } else {
+    callback(null, {
+      statusCode: 404,
+      headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
+      body: JSON.stringify({
+        message: 'No data was passed'
+      })
+    })
+  }
 }
 
 function getUserByID(event, context, callback) {
@@ -111,6 +186,10 @@ function getUserByID(event, context, callback) {
 
   callback(null, {
     statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    },
     body: JSON.stringify({
       message: 'GET /:id successful',
       event: event,
@@ -124,6 +203,10 @@ function deleteUserByID(event, context, callback) {
 
   callback(null, {
     statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    },
     body: JSON.stringify({
       message: 'DELETE /:id successful',
       event: event,
