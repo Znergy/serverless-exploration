@@ -52,7 +52,7 @@ function createUser(event, context, callback) {
   let json, userID, game, age, username, date, dt, customData, params = null
   if(event.body) {
     json = JSON.parse(event.body)
-    userID = Math.floor(Math.random() * 150) + 'afd'
+    userID = Math.round(Math.random() * 150) + 'afd'
     game = json.game
     age = json.age
     username = json.username
@@ -182,37 +182,99 @@ function updateUserByID(event, context, callback) {
 }
 
 function getUserByID(event, context, callback) {
-  let id = event.pathParameters.id
+  let userID = event.pathParameters.id
+  if(event.pathParameters.id) {
+    let params = {
+      TableName: 'Users',
+      Key: {
+        'UserID': userID
+      }
+    }
 
-  callback(null, {
-    statusCode: 200,
-    headers: {
-      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-    },
-    body: JSON.stringify({
-      message: 'GET /:id successful',
-      event: event,
-      id: id
+    docClient.get(params, function(err, data) {
+      if (err) {
+        callback(null, {
+          statusCode: 402,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      } else {
+        callback(null, {
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
+          body: JSON.stringify(data)
+        })
+      }
     })
-  })
+  } else {
+    callback(null, {
+      statusCode: 404,
+      headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
+      body: JSON.stringify({
+        message: 'Missing ID!'
+      })
+    })
+  }
 }
 
 function deleteUserByID(event, context, callback) {
-  let id = event.pathParameters.id
+  let userID = event.pathParameters.id
+  if(event.pathParameters.id) {
+    let params = {
+      TableName: 'Users',
+      Key: {
+        'UserID': userID
+      }
+    }
 
-  callback(null, {
-    statusCode: 200,
-    headers: {
-      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-    },
-    body: JSON.stringify({
-      message: 'DELETE /:id successful',
-      event: event,
-      id: id
+    docClient.delete(params, function(err, data) {
+      if (err) {
+        callback(null, {
+          statusCode: 402,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      } else {
+        callback(null, {
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+          },
+          body: JSON.stringify({
+            message: 'Deleted user successfully!'
+          })
+        })
+      }
     })
-  })
+  } else {
+    callback(null, {
+      statusCode: 404,
+      headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
+      body: JSON.stringify({
+        message: 'Missing ID!'
+      })
+    })
+  }
 }
 
 module.exports = { getUsers, createUser, updateUserByID, getUserByID, deleteUserByID }
