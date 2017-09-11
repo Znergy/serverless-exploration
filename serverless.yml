@@ -22,7 +22,10 @@ provider:
   region: us-west-2
   profile: serverless
   runtime: nodejs6.10
-  stage: dev
+  package:
+    exclude:
+      - "./**"
+  stage: testing
   versionFunctions: false # default is true
   iamRoleStatements:
     - Effect: "Allow"
@@ -51,45 +54,74 @@ provider:
 
 functions:
   getUsers:
-    handler: users.getUsers
+    handler: lambdas/CRUD/getUsers/index.handler
     description: Get users from the Users database
     events:
       - http:
           path: api/v1/users
           method: GET
           cors: true
+    package:
+      individually: true
+      exclude:
+        - ./**
+      include:
+        - ./lambdas/CRUD/getUsers/**
   createUser:
-    handler: users.createUser
+    handler: lambdas/CRUD/createUser/index.handler
     description: Create new users in the Users database
     events:
       - http:
           path: api/v1/users
           method: POST
           cors: true
+    package:
+      individually: true
+      exclude:
+        - ./**
+      include:
+        - ./lambdas/CRUD/createUser/**
   updateUserByID:
-    handler: users.updateUserByID
+    handler: lambdas/CRUD/updateUserByID/index.handler
     description: Update existing users in the Users database
     events:
       - http:
           path: api/v1/users/{id}
           method: PUT
           cors: true
+    package:
+      individually: true
+      exclude:
+        - ./**
+      include:
+        - ./lambdas/CRUD/updateUserByID/**
   getUserByID:
-    handler: users.getUserByID
+    handler: lambdas/CRUD/getUserByID/index.handler
     description: Get users by ID from the Users database
     events:
       - http:
           path: api/v1/users/{id}
           method: GET
           cors: true
+    package:
+      individually: true
+      exclude:
+        - ./**
+      include:
+        - ./lambdas/CRUD/getUserByID/**
   deleteUserByID:
-    handler: users.deleteUserByID
+    handler: lambdas/CRUD/deleteUserByID/index.handler
     description: Delete users by ID from the Users database
     events:
       - http:
           path: api/v1/users/{id}
           method: DELETE
           cors: true
+    package:
+      exclude:
+        - ./**
+      include:
+        - ./lambdas/CRUD/deleteUserByID/**
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
